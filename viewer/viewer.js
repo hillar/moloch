@@ -46,6 +46,7 @@ var Config         = require('./config.js'),
     http           = require('http'),
     https          = require('https'),
     KAA            = require('keep-alive-agent');
+    //NodeSyslogLogger = require('node-syslog-logger-simple');
 } catch (e) {
   console.log ("ERROR - Couldn't load some dependancies, maybe need to 'npm update' inside viewer directory", e);
   process.exit(1);
@@ -59,6 +60,7 @@ if (typeof express !== "function") {
     console.log("ERROR - Need to run 'npm update' in viewer directory");
     process.exit(1);
 }
+//var syslogLogger = new NodeSyslogLogger({'level':6});
 var app = express();
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +127,13 @@ app.configure(function() {
     return next();
   });
   app.use(express.bodyParser({uploadDir: Config.get("pcapDir")}));
-  app.use(express.logger({ format: ':date :username \x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :res[content-length] bytes :response-time ms' }));
+  // send req to acces log file or stdout
+  var _stream =  process.stdout;
+  var _acceslogfile = Config.get("accesLogFile");
+  if (_acceslogfile) {
+    _stream = fs.createWriteStream(_acceslogfile, {flags: 'a'});
+  }
+  app.use(express.logger({ format: ':date :username \x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :res[content-length] bytes :response-time ms', stream: _stream }));
   app.use(express.compress());
   app.use(express.methodOverride());
   app.use("/", express['static'](__dirname + '/public', { maxAge: 600 * 1000}));
@@ -1494,6 +1502,7 @@ app.get('/sessions.json', function(req, res) {
       graph.interval = query.facets.dbHisto.histogram.interval;
     }
 
+    //syslogLogger.debug("action=sessions; query="+JSON.stringify(query));
     console.log("sessions.json query", JSON.stringify(query));
 
     async.parallel({
