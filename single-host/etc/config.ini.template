@@ -169,6 +169,10 @@ spiDataMaxIndices=3
 # Uncomment the following to allow direct uploads.  This is experimental
 #uploadCommand=/data/moloch/bin/moloch-capture --copy -n {NODE} -r {TMPFILE} -c {CONFIG} {TAGS}
 
+# log viewer request to acces log file
+# sets express.logger stream to file
+accesLogFile = _TDIR_/var/log/acces.log
+
 
 # ADVANCED - How is pcap written to disk
 #    normal = just normal open/writes uses the linux page cache heavily (default)
