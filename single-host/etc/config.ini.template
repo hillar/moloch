@@ -171,7 +171,7 @@ spiDataMaxIndices=3
 
 # log viewer request to acces log file
 # sets express.logger stream to file
-accesLogFile = _TDIR_/var/log/acces.log
+accesLogFile = _TDIR_/logs/acces.log
 
 
 # ADVANCED - How is pcap written to disk

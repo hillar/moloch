@@ -129,9 +129,9 @@ app.configure(function() {
   app.use(express.bodyParser({uploadDir: Config.get("pcapDir")}));
   // send req to acces log file or stdout
   var _stream =  process.stdout;
-  var _acceslogfile = Config.get("accesLogFile");
-  if (_acceslogfile) {
-    _stream = fs.createWriteStream(_acceslogfile, {flags: 'a'});
+  var _accesslogfile = Config.get("accesLogFile");
+  if (_accesslogfile) {
+    _stream = fs.createWriteStream(_accesslogfile, {flags: 'a'});
   }
   app.use(express.logger({ format: ':date :username \x1b[1m:method\x1b[0m \x1b[33m:url\x1b[0m :res[content-length] bytes :response-time ms', stream: _stream }));
   app.use(express.compress());
